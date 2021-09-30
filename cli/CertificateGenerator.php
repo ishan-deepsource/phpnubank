@@ -7,6 +7,9 @@ use Nubank\Exceptions\NuRequestException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * @property string|null $encryptedCode
+ */
 class CertificateGenerator
 {
     private $login;
@@ -32,9 +35,9 @@ class CertificateGenerator
 
         $this->client = new \GuzzleHttp\Client();
         // $this->client = new \GuzzleHttp\Client(['debug'=>true]);
-        
+
         $discovery = new Discovery($this->client);
-        
+
         $this->url = $discovery->getAppUrl('gen_certificate');
     }
 
@@ -59,7 +62,7 @@ class CertificateGenerator
                 }
             ]
         );
-    } 
+    }
 
     public function exchangeCerts($code)
     {
@@ -82,7 +85,7 @@ class CertificateGenerator
         return (object)[
             'cert1' => $this->genCert($this->key1, $data['certificate'])
         ];
-    } 
+    }
 
     private function getPayload()
     {
@@ -100,7 +103,7 @@ class CertificateGenerator
     {
         $_key = openssl_pkey_export($key, $keyout, '');
         $path = realpath(__DIR__ . "/..") . "/cert/cert.p12";
-        
+
         openssl_pkcs12_export_to_file($cert, $path, $keyout, '');
     }
 
