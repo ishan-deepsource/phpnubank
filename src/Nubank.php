@@ -25,6 +25,10 @@ use GuzzleHttp\Client as GuzzleClient;
 
 /**
  * @property string $query_url
+ * @property string $revoke_token_url
+ * @property string $bills_url
+ * @property string $feed_url
+ * @property string $encryptedCode
  */
 class Nubank
 {
