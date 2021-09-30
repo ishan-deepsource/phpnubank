@@ -1,4 +1,8 @@
-
+<?php
+/**
+ * @var \stdClass $qrData
+ */
+?>
 <!doctype html>
     <html lang="en" class="h-100">
     <head>
