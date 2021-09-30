@@ -23,6 +23,9 @@ use Nubank\Utils\PixConstants;
 use Nubank\EventTypes\PaymentEventTypes;
 use GuzzleHttp\Client as GuzzleClient;
 
+/**
+ * @property string $query_url
+ */
 class Nubank
 {
   use MagicAttributes;
@@ -119,14 +122,14 @@ class Nubank
     $req->setHeader('Authorization', "Bearer {$this->token}");
 
     $req->get($this->feed_url);
-    
+
     return $req;
   }
 
   public function getCardStatements()
   {
     $feed = $this->getCardFeed();
-    
+
     return array_filter($feed->events, function($item) {
       return $item['category'] == 'transaction';
     });
@@ -141,24 +144,24 @@ class Nubank
     */
 
     $req = new CardBills($this->client);
-    
+
     $req->setConfig($this->authRequest->getConfig());
     $req->setHeader('Authorization', "Bearer {$this->token}");
 
     $req->get($this->bills_url);
-    
+
     return $req;
   }
 
   public function getBillDetails($url)
   {
     $req = new CardBillDetails($this->client);
-    
+
     $req->setConfig($this->authRequest->getConfig());
     $req->setHeader('Authorization', "Bearer {$this->token}");
 
     $req->get($url);
-    
+
     return $req;
   }
 
@@ -166,7 +169,7 @@ class Nubank
   {
     $req = new WithCertificate($this->client);
     $req->setCert($certPath);
-    
+
     $url = $this->discovery->getAppUrl('token');
 
     $payload = [
@@ -201,11 +204,11 @@ class Nubank
 
     $this->setAuthRequest($req);
   }
-  
+
   public function getAccountFeed()
   {
     $req = new AccountFeed($this->client);
-    
+
     $req->setConfig($this->authRequest->getConfig());
     $req->setHeader('Authorization', "Bearer {$this->token}");
 
@@ -219,12 +222,12 @@ class Nubank
     $feed = $this->getAccountFeed();
 
     $statements = array_map('pixTransaction', $feed['statements']);
-    
+
     return array_filter($statements, function($item) {
       return in_array($item['__typename'], PaymentEventTypes::all());
     });
   }
-  
+
   public function getAccountBalance()
   {
     $req = new AccountBalance($this->client);
@@ -240,7 +243,7 @@ class Nubank
   public function getAccountInvestimentsDetails()
   {
     $req = new AccountInvestmentsDetails($this->client);
-    
+
     $req->setConfig($this->authRequest->getConfig());
     $req->setHeader('Authorization', "Bearer {$this->token}");
 
@@ -272,7 +275,7 @@ class Nubank
   public function createBoleto($amount)
   {
     $req = new CreateBoleto($this->client);
-    
+
     $req->setConfig($this->authRequest->getConfig());
     $req->setHeader('Authorization', "Bearer {$this->token}");
 
@@ -284,7 +287,7 @@ class Nubank
   public function createMoneyRequest($amount)
   {
     $req = new AccountFeed($this->client);
-    
+
     $req->setConfig($this->authRequest->getConfig());
     $req->setHeader('Authorization', "Bearer {$this->token}");
 
@@ -308,7 +311,7 @@ class Nubank
   public function getAvailablePixKeys()
   {
     $req = new PixAvailableKeys($this->client);
-    
+
     $req->setConfig($this->authRequest->getConfig());
     $req->setHeader('Authorization', "Bearer {$this->token}");
 
@@ -320,7 +323,7 @@ class Nubank
   public function createAvailablePixPaymentQrCode($accountId, $amount, $pixKey)
   {
     $req = new PixQrCode($this->client);
-    
+
     $req->setConfig($this->authRequest->getConfig());
     $req->setHeader('Authorization', "Bearer {$this->token}");
 
